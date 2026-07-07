@@ -1,6 +1,6 @@
 /*считаем общее количество покупателей*/
 select 
-  COUNT(customer_id) as customers_count 
+	COUNT(distinct customer_id) as customers_count 
 from customers;
 
 
