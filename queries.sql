@@ -54,21 +54,32 @@ from table1
 order by day_number asc;
 
 /*количество покупателей в разных возрастных группах: 16-25, 26-40 и 40+*/
-WITH tab1 AS (
-    SELECT
-        CASE
-            WHEN age >= 16 AND age <= 25 THEN '16-25'
-            WHEN age >= 26 AND age <= 40 THEN '26-40'
-            WHEN age > 40 THEN '40+'
-        END AS age_category
-    FROM customers
+with tab1 as (
+    select
+        case
+            when age >= 16 AND age <= 25 then '16-25'
+            when age >= 26 AND age <= 40 then '26-40'
+            when age > 40 THEN '40+'
+        end as age_category
+    from customers
 )
-SELECT
+select
     age_category,
-    COUNT(age_category) AS age_count
-FROM tab1
-GROUP BY age_category
-ORDER BY age_category;
+    COUNT(age_category) as age_count
+from tab1
+group by age_category
+order by age_category;
+
+/*выводим данные по количеству уникальных покупателей и выручке, которую они принесли*/
+select
+    TO_CHAR(s.sale_date, 'YYYY-MM') as selling_month,
+    COUNT(distinct s.customer_id) as total_customers,
+    FLOOR(SUM(p.price * s.quantity))
+from sales as s
+left join products as p
+    on s.product_id = p.product_id
+group by selling_month
+order by selling_month asc;
 
 
 
