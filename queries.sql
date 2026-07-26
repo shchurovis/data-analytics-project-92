@@ -53,6 +53,23 @@ select
 from table1
 order by day_number asc;
 
+/*количество покупателей в разных возрастных группах: 16-25, 26-40 и 40+*/
+WITH tab1 AS (
+    SELECT
+        CASE
+            WHEN age >= 16 AND age <= 25 THEN '16-25'
+            WHEN age >= 26 AND age <= 40 THEN '26-40'
+            WHEN age > 40 THEN '40+'
+        END AS age_category
+    FROM customers
+)
+SELECT
+    age_category,
+    COUNT(age_category) AS age_count
+FROM tab1
+GROUP BY age_category
+ORDER BY age_category;
+
 
 
 
