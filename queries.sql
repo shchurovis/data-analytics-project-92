@@ -81,6 +81,40 @@ left join products as p
 group by selling_month
 order by selling_month asc;
 
+/*выводим покупателей, первая покупка которых пришлась на время проведения специальных акций*/
+WITH tab1 AS (
+    SELECT
+        c.customer_id AS id,
+        s.sale_date,
+        p.price AS pr,
+        c.first_name || ' ' || c.last_name AS customer,
+        e.first_name || ' ' || e.last_name AS seller,
+        row_number()
+            OVER (
+                PARTITION BY (c.first_name || ' ' || c.last_name)
+                ORDER BY s.sale_date
+            )
+            AS number
+    FROM customers AS c
+    LEFT JOIN sales AS s
+        ON c.customer_id = s.customer_id
+    LEFT JOIN employees AS e
+        ON s.sales_person_id = e.employee_id
+    LEFT JOIN products AS p
+        ON s.product_id = p.product_id
+    WHERE s.sale_date IS NOT NULL
+)
+
+SELECT
+    customer,
+    sale_date,
+    seller
+FROM tab1
+WHERE number = 1 AND pr = 0
+ORDER BY id;
+
+
+
 
 
 
