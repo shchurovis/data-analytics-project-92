@@ -51,7 +51,7 @@ select
     day_of_week,
     income
 from table1
-order by day_number asc;
+order by day_number, seller;
 
 /*количество покупателей в разных возрастных группах: 16-25, 26-40 и 40+*/
 with tab1 as (
