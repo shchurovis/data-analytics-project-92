@@ -15,7 +15,8 @@ left join products as p
     on s.product_id = p.product_id
 where s.quantity is not NULL
 group by seller
-order by income desc;
+order by income desc
+limit 10;
 
 /*отчет по продавцам, чья средняя выручка за сделку меньше средней выручки за сделку по всем продавцам*/
 select
