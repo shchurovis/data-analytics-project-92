@@ -19,16 +19,23 @@ order by income desc
 limit 10;
 
 /*отчет по продавцам, чья средняя выручка за сделку меньше средней выручки за сделку по всем продавцам*/
-select
-    e.first_name || ' ' || e.last_name as seller,
-    FLOOR(AVG(s.quantity * p.price)) as average_income
-from employees as e
-left join sales as s
-    on e.employee_id = s.sales_person_id
-left join products as p
-    on s.product_id = p.product_id
-where s.quantity is not NULL
-group by seller
+with tab1 as (
+	select
+	    e.first_name || ' ' || e.last_name as seller,
+	    FLOOR(AVG(s.quantity * p.price)) as average_income
+	from employees as e
+	left join sales as s
+	    on e.employee_id = s.sales_person_id
+	left join products as p
+	    on s.product_id = p.product_id
+	where s.quantity is not NULL
+	group by seller
+)
+select 
+	seller,
+	average_income
+from tab1 
+where average_income < (select AVG(average_income) from tab1)
 order by average_income asc;
 
 /*отчет, содержащий информацию о выручке по дням недели*/
