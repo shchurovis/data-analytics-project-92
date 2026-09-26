@@ -6,7 +6,7 @@ from customers;
 /*отчет с продавцами у которых наибольшая выручка*/
 select
     e.first_name || ' ' || e.last_name as seller,
-    SUM(s.quantity) as operations,
+    COUNT(s.sales_id) as operations,
     FLOOR(SUM(s.quantity * p.price)) as income
 from employees as e
 left join sales as s
